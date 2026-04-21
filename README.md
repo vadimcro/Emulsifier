@@ -1,6 +1,6 @@
 # Emulsifier
 
-A professional-grade, photometrically accurate film emulation engine built in Python. This tool bridges the gap between digital perfection and analog reality, bypassing standard digital additive math ("video game filters") in favor of subtractive color science, physical density mapping, and optical degradation models.
+A photometrically accurate film emulation engine built in Python. This tool bridges the gap between digital perfection and analog reality, bypassing standard digital additive math ("video game filters") in favor of subtractive color science, physical density mapping, and optical degradation models.
 
 ## The Main Idea: Breaking the Digital Illusion
 Modern digital cameras and AI image generators produce sterile, mathematically perfect pixels. They operate in a linear light domain where colors are added together, resulting in a hyper-clean, often "plastic" aesthetic. 
