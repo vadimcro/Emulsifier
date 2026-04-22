@@ -28,7 +28,7 @@ jobs:
       # We use --windowed to hide the black console terminal
       # We use --collect-all to ensure customtkinter themes and tkinterdnd2 binaries are packaged
       run: |
-        pyinstaller --noconfirm --onefile --windowed --collect-all customtkinter --collect-all tkinterdnd2 --name "Emulsifier_v1.77" renderer_v76.py
+        pyinstaller --noconfirm --onefile --windowed --collect-all customtkinter --collect-all tkinterdnd2 --name "Emulsifier_v1.77" renderer_v78.py
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
