@@ -17,6 +17,10 @@ Physical film is the exact opposite. Film is a messy, subtractive, physical medi
 
 ---
 
+﻿﻿<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/d3265db6-1c05-4a1a-bbde-d1ad72db8494" />
+
+---
+
 # Feature Guide: Interface & Color Science
 
 The Analogue Emulsion Renderer is divided into two main components: the Workspace (where you navigate and analyze your image) and the Physics Pipeline (where you manipulate the color science).
@@ -46,6 +50,10 @@ Monitor your dehancing process in real-time with two distinct comparison tools l
 ### 5. Exporting Full-Res Renders
 * **How it works:** Because the real-time UI operates on a proxy image for performance, clicking "Export Full-Res Render" bypasses the proxy. The engine funnels your original, massive image file through the math pipeline utilizing your exact slider coordinates.
 * **Formats:** Supports lossless `.PNG`, `.TIFF` (with deflate compression), and high-quality `.JPEG`.
+
+---
+
+<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/8c7df058-5936-46ec-90b9-0d938b20673a" />
 
 ---
 
