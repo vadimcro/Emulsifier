@@ -85,5 +85,12 @@ Monitor your dehancing process in real-time with two distinct comparison tools l
 * **Field Flatness Softness & Creep:** Simulates older lenses losing resolving power (blurring) toward the edges of the frame.
 * **Vignette Intensity & Creep:** Simulates physical light falloff darkening the corners of the lens barrel.
 
+---
+
+<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/f4f6316f-a9bf-49cb-8fd1-6df7960ed2a7" />
+
+
+---
+
 ### Output Levels
 * **Significance:** An interactive digital adjustment pass. Drag the three triangles under the histogram to set the absolute black point, white point, and midtone gamma. Use this to anchor true digital black if the film emulation leaves the shadows too "milky". Right-click to reset.
