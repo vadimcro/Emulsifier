@@ -2,6 +2,13 @@
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
 
+## [v1.79] - 2026-04-23 (The Non-Destructive Update)
+**Major Features & Architecture:**
+* **Undo / Redo Architecture:** Implemented a robust, 5-step state-caching system, allowing users to freely experiment with color chemistry without the fear of ruining their current grade.
+* **State Optimization (Action Hooks):** To prevent the undo stack from filling up with hundreds of useless micro-adjustments, the engine only takes a state snapshot when the user *finishes* an action (e.g., slider mouse release, right-click reset, toggle switch flip, profile change, or Auto-Mix completion).
+* **Native Keyboard Bindings:** Hooked up standard OS shortcuts for a seamless workflow: `Ctrl+Z` / `Cmd+Z` to Undo, and `Ctrl+Y` / `Cmd+Y` / `Cmd+Shift+Z` to Redo.
+* **Stack Management:** Capped the historical memory stack at 5 previous states to prevent RAM bloat, and ensured the redo stack automatically clears whenever a new parameter is actively adjusted.
+
 ## [v1.78] - 2026-04-22 (The PyInstaller Build Fixes)
 **Bugfixes & Code Architecture:**
 * **Fixed `_MEIxxxxx` Temp Folder Bug:** Implemented `sys.frozen` path routing. When compiled as a `--onefile` executable via PyInstaller, the app now correctly looks for the `/profiles` directory next to the `.exe` rather than crashing inside the Windows hidden AppData temp folder.
@@ -42,9 +49,3 @@ This document tracks the evolution of the Emulsifier engine, covering major arch
 * Built the interactive comparative view modes (Side-by-Side and Wipe slider).
 * Implemented the interactive Output Levels canvas widget (Black point, Gamma, White point mapping).
 
-## [v1.79] - 2026-04-23 (The Non-Destructive Update)
-**Major Features & Architecture:**
-* **Undo / Redo Architecture:** Implemented a robust, 5-step state-caching system, allowing users to freely experiment with color chemistry without the fear of ruining their current grade.
-* **State Optimization (Action Hooks):** To prevent the undo stack from filling up with hundreds of useless micro-adjustments, the engine only takes a state snapshot when the user *finishes* an action (e.g., slider mouse release, right-click reset, toggle switch flip, profile change, or Auto-Mix completion).
-* **Native Keyboard Bindings:** Hooked up standard OS shortcuts for a seamless workflow: `Ctrl+Z` / `Cmd+Z` to Undo, and `Ctrl+Y` / `Cmd+Y` / `Cmd+Shift+Z` to Redo.
-* **Stack Management:** Capped the historical memory stack at 5 previous states to prevent RAM bloat, and ensured the redo stack automatically clears whenever a new parameter is actively adjusted.
