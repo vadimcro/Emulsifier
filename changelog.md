@@ -1,6 +1,16 @@
-# Changelog: Emulsifier Film Emulator (v22 - v1.78)
+# Changelog: Emulsifier Film Emulator 
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
+
+## [v1.80 - v1.83] - The Hardware Acceleration Sprint
+**Major Architecture Pivots & Optimization:**
+* **CPU Vectorization (NumExpr) [v1.80]:** Completely refactored the math engine to bypass Python's Global Interpreter Lock (GIL). Photometric operations (S-Curves, Subtractive Saturation, Log mapping) are now compiled into C-machine code on the fly and distributed across all available logical CPU cores using AVX instructions. This eliminates gigabytes of temporary memory allocation (RAM thrashing) during real-time UI scrubbing.
+* **Auto-Mix Algorithm Rewrite [v1.80]:** Refactored the Global Washout Detector. It now resolves the 6.0% Luma threshold purely mathematically in a flattened, multithreaded `NumExpr` equation rather than rendering and blending massive 3D arrays sequentially.
+* **Pyramid Blur (Mipmapping) Architecture [v1.82]:** Solved a critical mathematical bottleneck when zooming into 4K+ images. Previously, scaling a Halation blur radius proportionally to a 4K file required massive 500x500px convolution kernels, freezing the UI. The engine now intercepts any blur with a Sigma > 5.0, geometrically downsamples the image, applies a micro-blur, and upsamples it back using bilinear interpolation. It creates identical low-frequency optical glows but executes ~100x faster.
+
+**Critical Bugfixes:**
+* **NumExpr Syntax Panic [v1.81]:** Fixed a crash where the NumExpr compiler encountered "forbidden control characters" because standard Python array slicing (`[:,:,0]`) was accidentally passed directly inside the evaluation strings.
+* **OpenCV Grain Destruction [v1.83]:** Attempted to use OpenCV's native C++ `cv2.randn` to generate film grain faster than NumPy. Discovered a structural quirk where passing a scalar standard deviation to a 3-channel OpenCV array only applies noise to the Red channel, zeroing out Green and Blue. Rolled the grain generation safely back to `np.random.normal()` to preserve the physically accurate 3-channel crystalline structure.
 
 ## [v1.79] - 2026-04-23 (The Non-Destructive Update)
 **Major Features & Architecture:**
