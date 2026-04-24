@@ -2,7 +2,7 @@
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
 
-## [v1.80 - v1.83] - The Hardware Acceleration Sprint
+## [v1.80 - v1.83] - 2026-04-24 (The Hardware Acceleration Sprint)
 **Major Architecture Pivots & Optimization:**
 * **CPU Vectorization (NumExpr) [v1.80]:** Completely refactored the math engine to bypass Python's Global Interpreter Lock (GIL). Photometric operations (S-Curves, Subtractive Saturation, Log mapping) are now compiled into C-machine code on the fly and distributed across all available logical CPU cores using AVX instructions. This eliminates gigabytes of temporary memory allocation (RAM thrashing) during real-time UI scrubbing.
 * **Auto-Mix Algorithm Rewrite [v1.80]:** Refactored the Global Washout Detector. It now resolves the 6.0% Luma threshold purely mathematically in a flattened, multithreaded `NumExpr` equation rather than rendering and blending massive 3D arrays sequentially.
