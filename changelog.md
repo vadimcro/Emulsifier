@@ -2,6 +2,15 @@
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
 
+## [v1.84] - 2026-04-25 (The QoL & Telemetry Update)
+**Major Features & UI/UX:**
+* **Dynamic Telemetry Title:** The application window title is now dynamically generated upon loading a file. It acts as a real-time heads-up display, showing the master image dimensions (px), the memory footprint (MB), and the active hardware acceleration layer (GPU vs. CPU OpenCL routing).
+* **Master Reset "Panic" Button:** Added a dedicated workspace reset button (`↺`) locked to the top-level UI hierarchy next to the image load button. It features a muted crimson aesthetic that highlights to bright red on hover. When triggered, it completely flattens all 19 sliders, resets the 3-way levels canvas, flips all bypass switches to active, and clears the active film profile.
+
+**Safety & Logic:**
+* **Reset Safeguards:** To prevent catastrophic accidental wipes of a complex grading session, the Master Reset button triggers an OS-level confirmation modal before executing. 
+* **Undo-Stack Integration:** The Master Reset action is strictly non-destructive. It explicitly takes a snapshot of the current grade and pushes it to the cache *before* wiping the slate. If a user resets and regrets it, they can simply press `Ctrl+Z` to instantly restore their entire node tree.
+
 ## [v1.80 - v1.83] - 2026-04-24 (The Hardware Acceleration Sprint)
 **Major Architecture Pivots & Optimization:**
 * **CPU Vectorization (NumExpr) [v1.80]:** Completely refactored the math engine to bypass Python's Global Interpreter Lock (GIL). Photometric operations (S-Curves, Subtractive Saturation, Log mapping) are now compiled into C-machine code on the fly and distributed across all available logical CPU cores using AVX instructions. This eliminates gigabytes of temporary memory allocation (RAM thrashing) during real-time UI scrubbing.
