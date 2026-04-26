@@ -2,6 +2,16 @@
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
 
+## [v1.88] - 2026-04-26 (The GPU VFX & Lens Flare Update)
+**Major Features & UI/UX:**
+* **VFX Lens Flare Node:** Introduced a highly procedural, physically modeled lens flare system. Features an interactive UI component allowing users to click a "Set Light Source" button, transforming the cursor into a crosshair to click and pinpoint the exact `U, V` spatial coordinates for the light emission.
+* **Additive Blending (Linear Dodge):** The flare integrates into the pipeline via authentic light-additive blending, preserving underlying image detail while realistically blowing out extreme highlights.
+
+**Architecture & Stability:**
+* **Taichi GPU Framework Integration:** Integrated the `taichi` compute framework to handle heavy procedural rendering. The application now natively targets the fastest available hardware backend (GPU) to execute the highly parallel noise and fractal mathematical kernels required for complex VFX, preventing CPU bottlenecks.
+* **Contiguous Memory Routing:** Upgraded NumPy array handling before GPU dispatches. Arrays are now forced into contiguous memory blocks (`np.ascontiguousarray`) prior to executing Taichi kernels, ensuring lightning-fast VRAM read/write speeds.
+* **Pipeline Refactor (Histogram Accuracy):** The telemetry capture for the Global Luminance Histogram (`pre_levels_blended`) was moved down the rendering chain. It now calculates *after* Edge Imperfections and Lens Flares, meaning the UI scope now accurately reflects the true luminance of the fully composited image rather than just the base print.
+
 ## [v1.86.1] - 2026-04-26 (The Quality of Life Update)
 **Major Features & UI/UX:**
 * **Clipboard Integration:** Implemented direct image pasting. Users can now press `Ctrl+V` (or `Cmd+V` on macOS) to instantly load image pixel data or copied image files directly from the OS clipboard. Includes a disappearing OSD notification confirming successful imports.
