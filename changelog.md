@@ -2,6 +2,12 @@
 
 This document tracks the evolution of the Emulsifier engine, covering major architectural pivots, mathematical implementations, UI/UX polish, and critical bug fixes.
 
+## [v1.86.1] - 2026-04-26 (The Quality of Life Update)
+**Major Features & UI/UX:**
+* **Clipboard Integration:** Implemented direct image pasting. Users can now press `Ctrl+V` (or `Cmd+V` on macOS) to instantly load image pixel data or copied image files directly from the OS clipboard. Includes a disappearing OSD notification confirming successful imports.
+* **Enhanced Dynamic Telemetry:** Upgraded the application window title to function as a persistent status bar. When an image is loaded, the title now dynamically displays the App Name, Version, "Image loaded" status, Master Resolution (px), Approximate Uncompressed Memory Size (MB), and the active Hardware Compute Layer (GPU vs. CPU).
+* **Interactive Viewport Controls:** Added interactive hover states to the bottom-left canvas display buttons (Zoom/Fit, Side-by-Side, and Wipe). The elements now react dynamically with background highlight shifts and cursor pointer changes, immediately telegraphing to the user that they are clickable interface elements rather than static labels.
+
 ## [v1.85 - v1.86] - 2026-04-25 (The Stability & Structural Grain Update)
 **Architecture & Stability Bugfixes:**
 * **The "Decoupled Stats" Pipeline:** Fixed a critical architectural flaw where the Auto-Mix threshold and Global Histogram were calculating data based *only* on the zoomed-in viewport. The rendering thread now executes a hidden, lightning-fast "Stats Pass" using the full, uncropped 1024px proxy to calculate global luminance perfectly, regardless of UI zoom state.
