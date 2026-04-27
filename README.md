@@ -1,4 +1,5 @@
-# Emulsifier
+
+# Emulsifier v1.88
 
 A photometrically accurate film emulation engine built in Python. This tool bridges the gap between digital perfection and analog reality, bypassing standard digital additive math ("video game filters") in favor of subtractive color science, physical density mapping, and optical degradation models.
 
@@ -7,17 +8,18 @@ Modern digital cameras and AI image generators produce sterile, mathematically p
 
 Physical film is the exact opposite. Film is a messy, subtractive, physical medium. It relies on chemical dye layers that block light, microscopic silver halide crystals that form irregular grain, and optical glass that bleeds red light (halation) and softens at the edges. 
 
-**Emulsifier was built to "dehance" digital perfection.** Instead of slapping a simple RGB color LUT onto an image, Emulsifier pushes your digital image through a simulated physical pipeline (*Optics -> Light Scatter -> Emulsion -> Darkroom Print -> Silver Grain*). It maps your digital exposure directly into the logarithmic physical film density domain, perfectly replicating the exact mathematical space used by high-end Hollywood film scanners. The result is a rich, organic, and truly cinematic image that feels like it was developed in a darkroom, not rendered on a GPU.
+**Emulsifier was built to "dehance" digital perfection.** Instead of slapping a simple RGB color LUT onto an image, Emulsifier pushes your digital image through a simulated physical pipeline (*Optics -> Light Scatter -> Emulsion -> Darkroom Print -> VFX Flare -> Silver Grain*). It maps your digital exposure directly into the logarithmic physical film density domain, perfectly replicating the exact mathematical space used by high-end Hollywood film scanners. The result is a rich, organic, and truly cinematic image that feels like it was developed in a darkroom, not rendered on a GPU.
 
 ## Key Architectural Pillars
-1. **Density-Direct Math:** Avoids the "Transmittance Trap." By keeping calculations in the Density domain, highlights roll off gently and shadows maintain analog milkiness without violently blowing out or crushing.
+1. **Density-Direct Math:** Avoids the "Transmittance Trap". By keeping calculations in the Density domain, highlights roll off gently and shadows maintain analog milkiness without violently blowing out or crushing.
 2. **Smart Auto-Mix Safety Net:** Film curves are inherently aggressive. Emulsifier's built-in "Smart Auto-Mix" analyzes the global average luminance of your image and calculates the exact blend limit that preserves organic dye shifts without washing out your midtones.
 3. **Subtractive Color Physics:** Accurately simulates Emulsion Crosstalk (chemical dye impurities) and Subtractive Saturation (where extreme highlights and shadows naturally lose color density).
-4. **Node Cache Performance:** Emulsifier caches every step of the photometric pipeline in RAM. Adjusting the print contrast or grain size does not require recalculating the heavy halation blur, allowing for seamless, real-time UI performance.
+4. **Hardware Acceleration Engine:** Emulsifier intelligently routes math through the fastest available hardware. It utilizes `NumExpr` for hyper-threaded CPU vectorization, and seamlessly offloads heavy procedural VFX (like fractal Lens Flares) to your dedicated GPU via the `Taichi` framework.
+5. **Node Cache Performance:** Emulsifier caches every step of the photometric pipeline in RAM. Adjusting the print contrast or grain size does not require recalculating the heavy halation blur, allowing for seamless, real-time UI performance.
 
 ---
 
-﻿﻿<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/d3265db6-1c05-4a1a-bbde-d1ad72db8494" />
+﻿﻿
 
 ---
 
@@ -29,31 +31,36 @@ The Analogue Emulsion Renderer is divided into two main components: the Workspac
 
 ## Part 1: Workspace & Navigation
 
-### 1. Film Profiles & The `/profiles` Directory
+### 1. Dynamic Telemetry HUD & Importing
+* **The HUD:** The application's window title acts as a real-time telemetry readout. Upon loading an image, it dynamically displays the App Version, original image resolution (px), approximate uncompressed memory footprint (MB), and the active compute layer (GPU vs. CPU Mode).
+* **Importing:** Load your digital images using the dedicated UI button, standard Drag & Drop, or **Direct Clipboard Paste** (`Ctrl+V` / `Cmd+V`). Emulsifier can instantly intercept and build canvases from raw pixel data or copied files directly from your OS clipboard.
+
+### 2. Film Profiles & The `/profiles` Directory
 * **How it works:** The engine is driven by physical film data. When the app launches, it scans the local `/profiles` folder for JSON files containing film metadata, which are mapped to CSV files containing the actual characteristic densitometry curves of real film stocks (e.g., Kodak Vision3, Fujifilm Provia).
 * **Usage:** Use the top dropdown menu to select a film emulation. If you add new JSON/CSV profiles to the `/profiles` folder, the app will automatically build a cached list on its next boot.
 
-### 2. Dual-Luminance Histograms (Ghost & Gold)
-* **How it works:** The top right panel features a decoupled, dual-display histogram to visualize exactly how the film chemistry is altering your exposure.
+### 3. Dual-Luminance Histograms (Ghost & Gold)
+* **How it works:** The top right panel features a decoupled, dual-display histogram to visualize exactly how the film chemistry is altering your exposure. It safely bypasses localized viewports to calculate exact, full-frame statistics.
 * **The "Ghost" (Grey):** This represents the luminance of your *original* digital image. It remains static, acting as a structural anchor.
-* **The "Gold":** This represents your *dehanced* image. As you push contrast, grain, or split tones, you can watch the gold histogram shift, compress, or expand against the grey original.
+* **The "Gold":** This represents your *dehanced* image. As you push contrast, flares, or split tones, you can watch the gold histogram shift, compress, or expand against the grey original.
 
-### 3. Comparative View Modes
-Monitor your dehancing process in real-time with two distinct comparison tools located at the bottom left of the preview window:
+### 4. Interactive Comparative View Modes
+Monitor your dehancing process in real-time with responsive UI buttons located at the bottom left of the preview window:
 * **[ | ] Side-by-Side:** Splits the canvas evenly. The left monitor shows the raw original; the right shows the live rendered output.
 * **WIPE:** Overlays the dehanced image directly on top of the original. Click and drag the vertical slider left and right to inspect specific details (like skin tones or halation bleed) across the exact same pixel coordinates.
 
-### 4. Zoom & Panning
-* **Zooming:** Use your mouse wheel, or simply click directly on the canvas to punch in for 1-to-1 pixel peeping (crucial for checking grain size and chromatic aberration). Click again to return to "FIT" mode.
+### 5. Zooming, Panning & Master Reset
+* **Zooming:** Use your mouse wheel, or simply click directly on the canvas to punch in for 1-to-1 pixel peeping (crucial for checking grain structure and chromatic aberration). Click again to return to "FIT" mode.
 * **Panning:** While zoomed in, hold the **[ Spacebar ]** and drag your mouse to pan around the image. 
+* **Master Reset & Undo:** A global reset button (`↺`) instantly flattens all sliders and neutralizes the workspace. All slider changes, profiles, and resets are tracked by a 5-step Undo/Redo stack (`Ctrl+Z` / `Ctrl+Y`).
 
-### 5. Exporting Full-Res Renders
+### 6. Exporting Full-Res Renders
 * **How it works:** Because the real-time UI operates on a proxy image for performance, clicking "Export Full-Res Render" bypasses the proxy. The engine funnels your original, massive image file through the math pipeline utilizing your exact slider coordinates.
 * **Formats:** Supports lossless `.PNG`, `.TIFF` (with deflate compression), and high-quality `.JPEG`.
 
 ---
 
-<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/8c7df058-5936-46ec-90b9-0d938b20673a" />
+
 
 ---
 
@@ -78,8 +85,12 @@ Monitor your dehancing process in real-time with two distinct comparison tools l
 * **Subtractive Saturation:** In physical film, pure white and pure black cannot hold color. This slider naturally desaturates the extreme highlights and darkest shadows, fixing "neon" digital skies.
 * **Warm/Cool Split Tone:** Mimics slight chemical temperature imbalances during darkroom development, pushing midtones warm and shadows cool (or vice versa).
 
+### VFX Lens Flare
+* **Interactive Light Placement:** A heavily procedural, GPU-accelerated optical flare. Click the **"Set Light Source"** button to convert your cursor to a crosshair, allowing you to click anywhere on your image to physically pinpoint the flare's `U, V` origin coordinates. The flare uses authentic Linear Dodge additive math to realistically blow out your image's highlights.
+
 ### Physical Grain
-* **Dye Cloud Amount & Crystal Size:** Generates non-linear grain that correctly interacts with image luminance (grain is most visible in midtones, and disappears in pure whites/blacks). Use size `1.2` for clean 35mm, or `2.5+` for gritty 16mm.
+* **Dye Cloud Amount & Crystal Size:** Generates non-linear grain that correctly interacts with image luminance (grain is most visible in midtones, and disappears in pure whites/blacks). 
+* **Structural Sparsity & Color Variation:** Driven by a high-contrast exponent curve, the grain generator perfectly replicates jagged silver-halide clumping without resorting to blurry spatial smoothing. The "Color Variation" slider seamlessly blends between crisp, monochromatic structural crystals (0%) and chaotic, overlapping chemical dye clouds (100%).
 
 ### Edge Imperfections
 * **Field Flatness Softness & Creep:** Simulates older lenses losing resolving power (blurring) toward the edges of the frame.
@@ -87,9 +98,5 @@ Monitor your dehancing process in real-time with two distinct comparison tools l
 
 ### Output Levels
 * **Significance:** An interactive digital adjustment pass. Drag the three triangles under the histogram to set the absolute black point, white point, and midtone gamma. Use this to anchor true digital black if the film emulation leaves the shadows too "milky". Right-click to reset.
-
----
-
-<img width="1971" height="1161" alt="image" src="https://github.com/user-attachments/assets/f4f6316f-a9bf-49cb-8fd1-6df7960ed2a7" />
 
 ---
