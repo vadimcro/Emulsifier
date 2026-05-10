@@ -13,11 +13,10 @@
         "d_max": {
             "r": 2.393,
             "g": 2.859,
-            "b": 2.815
+            "b": 3.201
         }
     },
     "data_files": {
         "characteristic_curve": "fujifilm_fujicolor_pro_160c_char.csv"
     }
-    
 }

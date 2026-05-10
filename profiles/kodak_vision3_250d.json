@@ -1,0 +1,22 @@
+{
+    "manufacturer": "Kodak",
+    "film_name": "VISION3 250D",
+    "properties": {
+        "film_type": "negative"
+    },
+    "density_anchors": {
+        "d_min": {
+            "r": 0.206,
+            "g": 0.602,
+            "b": 0.864
+        },
+        "d_max": {
+            "r": 1.847,
+            "g": 2.563,
+            "b": 2.74
+        }
+    },
+    "data_files": {
+        "characteristic_curve": "kodak_vision3_250d_char.csv"
+    }
+}

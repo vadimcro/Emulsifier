@@ -1,0 +1,22 @@
+{
+    "manufacturer": "Kodak",
+    "film_name": "VISION3 50D",
+    "properties": {
+        "film_type": "negative"
+    },
+    "density_anchors": {
+        "d_min": {
+            "r": 0.169,
+            "g": 0.602,
+            "b": 0.864
+        },
+        "d_max": {
+            "r": 1.905,
+            "g": 2.63,
+            "b": 2.848
+        }
+    },
+    "data_files": {
+        "characteristic_curve": "kodak_vision3_50d_char.csv"
+    }
+}
