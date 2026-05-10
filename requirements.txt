@@ -1,7 +1,8 @@
-customtkinter
-tkinterdnd2
-Pillow
-numpy
 opencv-python
+numpy
+opencv-contrib-python
 numexpr
 taichi
+tkinterdnd2
+customtkinter
+Pillow
